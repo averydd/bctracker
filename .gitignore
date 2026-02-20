@@ -39,3 +39,15 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Claude Code
+.claude/
+
+# Personal data
+Body Count.csv
+*.csv
+
+# Vim swap files
+*.swp
+*.swo
+*~
