@@ -4,6 +4,7 @@ import { read, utils } from 'xlsx';
 import { createPartner } from '../db/partners';
 import { createEncounter } from '../db/encounters';
 import { getDatabase } from '../db/database';
+import { checkAndUnlockAchievements } from '../db/achievements';
 
 export interface ImportRow {
   penetration: boolean;
@@ -154,6 +155,9 @@ export async function importRowsToDatabase(rows: ImportRow[]): Promise<{ partner
       }
     }
   }
+
+  // Check and unlock achievements after import
+  await checkAndUnlockAchievements();
 
   return { partners: partnerCount, encounters: encounterCount };
 }

@@ -8,6 +8,7 @@ import { getAllSTITests, completeSTITest, STITestWithDetails } from '../db/sti-t
 import { AchievementBadge } from '../components/AchievementBadge';
 import { importFromFile, importRowsToDatabase } from '../utils/excel-import';
 import { clearAllData } from '../db/database';
+import { exportDataToCSV, exportStatsToJSON } from '../utils/excel-export';
 
 export function ProfileScreen({ navigation }: any) {
   const { refreshKey, refresh } = useDatabase();
@@ -143,6 +144,24 @@ export function ProfileScreen({ navigation }: any) {
     );
   }
 
+  async function handleExportCSV() {
+    try {
+      await exportDataToCSV();
+      Alert.alert('Export Complete', 'Your data has been exported to CSV format.');
+    } catch (error: any) {
+      Alert.alert('Export Error', error.message);
+    }
+  }
+
+  async function handleExportBackup() {
+    try {
+      await exportStatsToJSON();
+      Alert.alert('Backup Complete', 'Full backup has been exported as JSON.');
+    } catch (error: any) {
+      Alert.alert('Export Error', error.message);
+    }
+  }
+
   const unlockedTypes = new Set(achievements.map(a => a.type));
   const pendingTests = stiTests.filter(t => !t.completed);
   const completedTests = stiTests.filter(t => t.completed);
@@ -262,6 +281,28 @@ export function ProfileScreen({ navigation }: any) {
               {importing ? 'Importing...' : 'Import from Excel/CSV'}
             </Text>
             <Text style={styles.actionDesc}>Import your existing spreadsheet data</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleExportCSV}
+        >
+          <Text style={styles.actionIcon}>📤</Text>
+          <View style={styles.actionInfo}>
+            <Text style={styles.actionLabel}>Export to CSV</Text>
+            <Text style={styles.actionDesc}>Export your data as spreadsheet</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleExportBackup}
+        >
+          <Text style={styles.actionIcon}>💾</Text>
+          <View style={styles.actionInfo}>
+            <Text style={styles.actionLabel}>Export Full Backup</Text>
+            <Text style={styles.actionDesc}>Complete backup with all data as JSON</Text>
           </View>
         </TouchableOpacity>
 
